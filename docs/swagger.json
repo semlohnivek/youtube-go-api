@@ -1,0 +1,282 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API for downloading YouTube videos using kkdai/youtube.",
+        "title": "YouTube Video Downloader API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/download": {
+            "post": {
+                "description": "Download a YouTube video by specifying the video ID, quality, and audio-only option",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Download"
+                ],
+                "summary": "Download a YouTube video",
+                "parameters": [
+                    {
+                        "description": "Download request payload",
+                        "name": "downloadRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.DownloadRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/video/{id}": {
+            "get": {
+                "description": "Get details about a YouTube video by video ID",
+                "tags": [
+                    "Video"
+                ],
+                "summary": "Get video details",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "YouTube Video ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.VideoDetails"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.DownloadRequest": {
+            "type": "object",
+            "required": [
+                "video_id"
+            ],
+            "properties": {
+                "audio_only": {
+                    "type": "boolean"
+                },
+                "quality": {
+                    "type": "string"
+                },
+                "video_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.VideoDetails": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "duration": {
+                    "$ref": "#/definitions/time.Duration"
+                },
+                "formats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/youtube.Format"
+                    }
+                },
+                "thumbnails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/youtube.Thumbnail"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "time.Duration": {
+            "type": "integer",
+            "enum": [
+                1,
+                1000,
+                1000000,
+                1000000000,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                -129542144
+            ],
+            "x-enum-varnames": [
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute"
+            ]
+        },
+        "youtube.Format": {
+            "type": "object",
+            "properties": {
+                "approxDurationMs": {
+                    "type": "string"
+                },
+                "audioChannels": {
+                    "type": "integer"
+                },
+                "audioQuality": {
+                    "type": "string"
+                },
+                "audioSampleRate": {
+                    "type": "string"
+                },
+                "audioTrack": {
+                    "description": "AudioTrack is only available for videos with multiple audio track languages",
+                    "type": "object",
+                    "properties": {
+                        "audioIsDefault": {
+                            "type": "boolean"
+                        },
+                        "displayName": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "averageBitrate": {
+                    "type": "integer"
+                },
+                "bitrate": {
+                    "type": "integer"
+                },
+                "contentLength": {
+                    "type": "string",
+                    "example": "0"
+                },
+                "fps": {
+                    "type": "integer"
+                },
+                "height": {
+                    "type": "integer"
+                },
+                "indexRange": {
+                    "description": "IndexRange is only available for adaptive formats",
+                    "type": "object",
+                    "properties": {
+                        "end": {
+                            "type": "string"
+                        },
+                        "start": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "initRange": {
+                    "description": "InitRange is only available for adaptive formats",
+                    "type": "object",
+                    "properties": {
+                        "end": {
+                            "type": "string"
+                        },
+                        "start": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "itag": {
+                    "type": "integer"
+                },
+                "lastModified": {
+                    "type": "string"
+                },
+                "mimeType": {
+                    "type": "string"
+                },
+                "projectionType": {
+                    "type": "string"
+                },
+                "quality": {
+                    "type": "string"
+                },
+                "qualityLabel": {
+                    "type": "string"
+                },
+                "signatureCipher": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "width": {
+                    "type": "integer"
+                }
+            }
+        },
+        "youtube.Thumbnail": {
+            "type": "object",
+            "properties": {
+                "height": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "width": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

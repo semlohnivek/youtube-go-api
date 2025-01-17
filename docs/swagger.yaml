@@ -1,0 +1,193 @@
+basePath: /
+definitions:
+  main.DownloadRequest:
+    properties:
+      audio_only:
+        type: boolean
+      quality:
+        type: string
+      video_id:
+        type: string
+    required:
+    - video_id
+    type: object
+  main.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  main.VideoDetails:
+    properties:
+      author:
+        type: string
+      duration:
+        $ref: '#/definitions/time.Duration'
+      formats:
+        items:
+          $ref: '#/definitions/youtube.Format'
+        type: array
+      thumbnails:
+        items:
+          $ref: '#/definitions/youtube.Thumbnail'
+        type: array
+      title:
+        type: string
+    type: object
+  time.Duration:
+    enum:
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - -129542144
+    type: integer
+    x-enum-varnames:
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+  youtube.Format:
+    properties:
+      approxDurationMs:
+        type: string
+      audioChannels:
+        type: integer
+      audioQuality:
+        type: string
+      audioSampleRate:
+        type: string
+      audioTrack:
+        description: AudioTrack is only available for videos with multiple audio track
+          languages
+        properties:
+          audioIsDefault:
+            type: boolean
+          displayName:
+            type: string
+          id:
+            type: string
+        type: object
+      averageBitrate:
+        type: integer
+      bitrate:
+        type: integer
+      contentLength:
+        example: "0"
+        type: string
+      fps:
+        type: integer
+      height:
+        type: integer
+      indexRange:
+        description: IndexRange is only available for adaptive formats
+        properties:
+          end:
+            type: string
+          start:
+            type: string
+        type: object
+      initRange:
+        description: InitRange is only available for adaptive formats
+        properties:
+          end:
+            type: string
+          start:
+            type: string
+        type: object
+      itag:
+        type: integer
+      lastModified:
+        type: string
+      mimeType:
+        type: string
+      projectionType:
+        type: string
+      quality:
+        type: string
+      qualityLabel:
+        type: string
+      signatureCipher:
+        type: string
+      url:
+        type: string
+      width:
+        type: integer
+    type: object
+  youtube.Thumbnail:
+    properties:
+      height:
+        type: integer
+      url:
+        type: string
+      width:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for downloading YouTube videos using kkdai/youtube.
+  title: YouTube Video Downloader API
+  version: "1.0"
+paths:
+  /download:
+    post:
+      consumes:
+      - application/json
+      description: Download a YouTube video by specifying the video ID, quality, and
+        audio-only option
+      parameters:
+      - description: Download request payload
+        in: body
+        name: downloadRequest
+        required: true
+        schema:
+          $ref: '#/definitions/main.DownloadRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Download a YouTube video
+      tags:
+      - Download
+  /video/{id}:
+    get:
+      description: Get details about a YouTube video by video ID
+      parameters:
+      - description: YouTube Video ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.VideoDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Get video details
+      tags:
+      - Video
+swagger: "2.0"
